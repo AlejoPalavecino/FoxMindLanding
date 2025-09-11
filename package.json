@@ -1,0 +1,11 @@
+{
+  "name": "landing-page-foxmind",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "devDependencies": {
+    "netlify-cli": "^23.5.1"
+  }
+}

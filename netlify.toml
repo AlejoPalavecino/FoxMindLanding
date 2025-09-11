@@ -1,0 +1,10 @@
+[build]
+  publish = "."   # Sirve el index.html del directorio actual
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"  # para usar fetch nativo de Node 18+
+
+[dev]
+  port = 8888
+  framework = "#static"
