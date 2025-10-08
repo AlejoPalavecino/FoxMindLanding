@@ -186,6 +186,76 @@
     };
   </script>
 
+  <!-- EmailJS para envío de formularios -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    // Configuración de EmailJS desde variables de entorno
+    let emailjsConfig = {
+      publicKey: '',
+      serviceId: '',
+      templateId: '',
+      contactEmail: 'edufoxmind@gmail.com'
+    };
+
+    // Función para cargar configuración
+    async function loadEmailJSConfig() {
+      try {
+        // Intentar cargar desde endpoint de Netlify Functions primero
+        const netlifyResponse = await fetch('/.netlify/functions/get-config');
+        if (netlifyResponse.ok) {
+          const config = await netlifyResponse.json();
+          emailjsConfig = {
+            publicKey: config.EMAILJS_PUBLIC_KEY,
+            serviceId: config.EMAILJS_SERVICE_ID,
+            templateId: config.EMAILJS_TEMPLATE_ID,
+            contactEmail: config.CONTACT_EMAIL || 'edufoxmind@gmail.com'
+          };
+        } else {
+          throw new Error('Netlify functions not available');
+        }
+      } catch (error) {
+        // Fallback: intentar cargar desde .env local
+        try {
+          const response = await fetch('.env');
+          const envText = await response.text();
+          const envLines = envText.split('\n');
+          
+          envLines.forEach(line => {
+            if (line.includes('EMAILJS_PUBLIC_KEY=')) {
+              emailjsConfig.publicKey = line.split('=')[1].trim();
+            } else if (line.includes('EMAILJS_SERVICE_ID=')) {
+              emailjsConfig.serviceId = line.split('=')[1].trim();
+            } else if (line.includes('EMAILJS_TEMPLATE_ID=')) {
+              emailjsConfig.templateId = line.split('=')[1].trim();
+            } else if (line.includes('CONTACT_EMAIL=')) {
+              emailjsConfig.contactEmail = line.split('=')[1].trim();
+            }
+          });
+        } catch (envError) {
+          console.warn('No se pudo cargar la configuración desde .env local');
+          // Configuración por defecto para desarrollo
+          emailjsConfig = {
+            publicKey: '',
+            serviceId: '',
+            templateId: '',
+            contactEmail: 'edufoxmind@gmail.com'
+          };
+        }
+      }
+      
+      // Inicializar EmailJS con la clave pública si está disponible
+      if (emailjsConfig.publicKey && emailjsConfig.publicKey !== 'your_public_key_here' && emailjsConfig.publicKey !== '') {
+        emailjs.init(emailjsConfig.publicKey);
+        console.log('EmailJS inicializado con clave:', emailjsConfig.publicKey);
+      } else {
+        console.warn('EmailJS no se pudo inicializar, clave pública no válida:', emailjsConfig.publicKey);
+      }
+    }
+
+    // Cargar configuración al inicio
+    loadEmailJSConfig();
+  </script>
+
   <title>FoxMind - Educación Inclusiva Potenciada por IA</title>
 </head>
 <body class="antialiased bg-white text-gray-800 font-lato">
@@ -557,14 +627,30 @@
 <section id="contacto" class="bg-gray-50 py-20 px-6">
   <div class="max-w-4xl mx-auto text-center">
     <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-      ¿Listo para empezar?
+      ¿Listo para transformar la educación?
     </h2>
-    <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-      Actualmente estamos en desarrollo
-    </h2>
+    <h3 class="text-2xl md:text-3xl font-poppins font-semibold text-foxmind-orange mt-2">
+      Sé de los primeros en probarlo
+    </h3>
     <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-      Completá el formulario y te sumamos a la lista para probar la plataforma.
+      Estamos desarrollando algo increíble. Completá el formulario y te sumaremos a la lista prioritaria para probar la plataforma.
     </p>
+    
+    <!-- Agregamos beneficios para aumentar conversión -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+      <div class="bg-white rounded-lg p-4 shadow-sm">
+        <div class="text-foxmind-orange text-2xl mb-2">🚀</div>
+        <p class="text-sm font-semibold text-gray-700">Acceso temprano gratuito</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-sm">
+        <div class="text-foxmind-orange text-2xl mb-2">📞</div>
+        <p class="text-sm font-semibold text-gray-700">Soporte personalizado</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-sm">
+        <div class="text-foxmind-orange text-2xl mb-2">🎓</div>
+        <p class="text-sm font-semibold text-gray-700">Capacitación incluida</p>
+      </div>
+    </div>
 
     <div class="mt-12 bg-white rounded-2xl shadow-xl p-8 max-w-3xl mx-auto">
       <!-- novalidate para manejar mensajes custom -->
@@ -655,28 +741,65 @@
           <p class="mt-1 text-sm text-red-600 hidden" data-error-for="email"></p>
         </div>
 
+        <!-- Mensaje opcional para mayor contexto -->
+        <div>
+          <label for="message" class="block text-left font-poppins font-semibold text-gray-900">
+            Mensaje (opcional)
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Contanos qué necesidades específicas tenés o qué te gustaría lograr con FoxMind..."
+            rows="4"
+            class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-orange shadow-inner resize-vertical"
+            maxlength="500"
+          ></textarea>
+          <p class="mt-1 text-xs text-gray-500">Máximo 500 caracteres</p>
+        </div>
+
         <button
           type="submit"
-          class="w-full bg-foxmind-orange text-white font-poppins font-bold rounded-lg px-6 py-3 hover:bg-orange-600 transition-transform transform hover:scale-105"
+          class="w-full bg-foxmind-orange text-white font-poppins font-bold rounded-lg px-6 py-4 hover:bg-orange-600 transition-all transform hover:scale-105 focus:ring-4 focus:ring-orange-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
-          ENVIAR SOLICITUD
+          <span class="flex items-center justify-center">
+            <svg class="hidden loading-icon animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="button-text">QUIERO SER DE LOS PRIMEROS 🚀</span>
+          </span>
         </button>
 
-        <!-- Mensaje general -->
-        <p id="form-msg" class="mt-3 text-sm text-gray-700" aria-live="polite"></p>
+        <!-- Mensaje solo para errores de validación -->
+        <p id="form-msg" class="mt-3 text-sm text-red-600 hidden" aria-live="polite"></p>
       </form>
     </div>
   </div>
 
   <!-- Validación accesible y amigable -->
   <script>
-    (function () {
+    // Función global para el modal
+    window.showModal = function(title, message) {
+      const modal = document.getElementById('notification-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const modalMessage = document.getElementById('modal-message');
+      
+      if (modal && modalTitle && modalMessage) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('contact-form');
       const fields = {
         fullName: document.getElementById('fullName'),
         position: document.getElementById('position'),
         school: document.getElementById('school'),
         email: document.getElementById('email'),
+        message: document.getElementById('message'),
         honeypot: document.getElementById('sitioWeb'),
       };
       const formMsg = document.getElementById('form-msg');
@@ -739,7 +862,11 @@
         form.addEventListener(evt, e => {
           if (e.target && e.target.id && fields[e.target.id]) {
             clearError(e.target);
-            formMsg.textContent = '';
+            // Solo limpiar mensaje si es de validación (rojo)
+            if (formMsg.classList.contains('text-red-600')) {
+              formMsg.textContent = '';
+              formMsg.classList.add('hidden');
+            }
           }
         });
       });
@@ -748,7 +875,9 @@
         e.preventDefault();
 
         let firstInvalid = null;
+        // Limpiar mensaje de validación anterior
         formMsg.textContent = '';
+        formMsg.classList.add('hidden');
 
         // Ejecutar validaciones
         const validations = [
@@ -771,15 +900,85 @@
         if (firstInvalid) {
           firstInvalid.focus();
           formMsg.textContent = 'Revisá los campos marcados en rojo y volvé a intentar.';
+          formMsg.classList.remove('hidden');
           return;
         }
 
-        // Si todo está OK, acá podés enviar al servidor con fetch()
-        // fetch('/api/contacto', { method:'POST', body: new FormData(form) })...
-        formMsg.textContent = '¡Listo! Validación correcta. (Conectá aquí tu endpoint para enviar los datos).';
-        form.reset();
+        // Limpiar mensaje de error si había alguno
+        formMsg.textContent = '';
+        formMsg.classList.add('hidden');
+
+        // Envío del formulario con EmailJS
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const buttonText = submitBtn.querySelector('.button-text');
+        const loadingIcon = submitBtn.querySelector('.loading-icon');
+        const originalText = buttonText.textContent;
+        
+        submitBtn.disabled = true;
+        buttonText.textContent = 'ENVIANDO...';
+        loadingIcon.classList.remove('hidden');
+        
+        // Verificar que la configuración esté cargada
+        console.log('Estado de emailjsConfig:', emailjsConfig);
+        
+        if (!emailjsConfig.serviceId || emailjsConfig.serviceId === 'your_service_id_here' || emailjsConfig.serviceId === '') {
+          console.error('EmailJS no configurado correctamente:', emailjsConfig);
+          showModal('Error de Configuración', 'Por favor, escribinos directamente a ' + emailjsConfig.contactEmail);
+          submitBtn.disabled = false;
+          buttonText.textContent = originalText;
+          loadingIcon.classList.add('hidden');
+          return;
+        }
+
+        if (!emailjsConfig.publicKey || emailjsConfig.publicKey === '') {
+          console.error('EmailJS Public Key no disponible');
+          showModal('Error de Configuración', 'Por favor, escribinos directamente a ' + emailjsConfig.contactEmail);
+          submitBtn.disabled = false;
+          buttonText.textContent = originalText;
+          loadingIcon.classList.add('hidden');
+          return;
+        }
+        
+        // Preparar datos para EmailJS usando variables de entorno
+        const templateParams = {
+          fullName: fields.fullName.value,
+          email: fields.email.value,
+          position: fields.position.value,
+          school: fields.school.value,
+          message: document.getElementById('message').value || 'Sin mensaje adicional',
+          to_email: emailjsConfig.contactEmail,
+          reply_to: fields.email.value
+        };
+
+        // Debug: verificar que los datos están correctos
+        console.log('Datos que se van a enviar:', templateParams);
+
+        emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, templateParams)
+          .then((response) => {
+            form.reset();
+            // Solo mostrar modal de éxito
+            showModal('¡Bienvenido/a a FoxMind!', 'Gracias por sumarte a nuestra lista prioritaria. Te mantendremos informado/a sobre el lanzamiento y te contactaremos pronto.');
+          })
+          .catch((error) => {
+            console.error('Error completo:', error);
+            console.error('Tipo de error:', typeof error);
+            console.error('Mensaje de error:', error.message || error.text || error);
+            console.error('Configuración usada:', {
+              serviceId: emailjsConfig.serviceId,
+              templateId: emailjsConfig.templateId,
+              publicKey: emailjsConfig.publicKey ? '***configurada***' : 'NO CONFIGURADA'
+            });
+            
+            // Solo mostrar modal de error
+            showModal('Error al Enviar', 'Hubo un problema al enviar la solicitud. Por favor, intentá de nuevo o escribinos directamente a ' + emailjsConfig.contactEmail);
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            buttonText.textContent = originalText;
+            loadingIcon.classList.add('hidden');
+          });
       });
-    })();
+    });
   </script>
 </section>
 
@@ -862,16 +1061,8 @@
 
       // --- Lógica del Modal de Notificaciones ---
       const modal = document.getElementById('notification-modal');
-      const modalTitle = document.getElementById('modal-title');
-      const modalMessage = document.getElementById('modal-message');
       const modalCloseBtn = document.getElementById('modal-close-btn');
 
-      function showModal(title, message) {
-        modalTitle.textContent = title;
-        modalMessage.textContent = message;
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-      }
       modalCloseBtn.addEventListener('click', () => {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
@@ -1058,34 +1249,7 @@ async function callGemini(prompt, resultContainer, button) {
   }
 
       // --- Lógica del Formulario de Contacto ---
-      // --- Lógica del Formulario de Contacto con EmailJS ---
-      document.getElementById('contact-form').addEventListener('submit', function(e) {
-          e.preventDefault();
-
-          const btn = this.querySelector('button[type="submit"]');
-          btn.disabled = true;
-          btn.textContent = 'Enviando...';
-
-          // Pega aquí tus claves de EmailJS
-          const serviceID = 'service_b76ws1k';
-          const templateID = 'template_5n8wpts';
-          const publicKey = 'pjCIenR48InY-V7aV'; // Lo encuentras en la sección Account de EmailJS
-
-          emailjs.init(publicKey);
-
-          emailjs.sendForm(serviceID, templateID, this)
-              .then(() => {
-                  btn.disabled = false;
-                  btn.textContent = 'ENVIAR SOLICITUD';
-                  showModal('¡Enviado!', 'Tu mensaje ha sido enviado correctamente. Nos pondremos en contacto pronto.');
-                  this.reset();
-              }, (err) => {
-                  btn.disabled = false;
-                  btn.textContent = 'ENVIAR SOLICITUD';
-                  showModal('Error', 'Hubo un problema al enviar el mensaje. Por favor, inténtalo de nuevo.');
-                  console.log(JSON.stringify(err));
-              });
-      });
+      // Ya se maneja en el script del formulario de contacto arriba
     });
   </script>
 </body>
