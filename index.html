@@ -199,23 +199,35 @@
 
     // Función para cargar configuración
     async function loadEmailJSConfig() {
+      console.log('🔄 Iniciando carga de configuración EmailJS...');
+      
       try {
         // Intentar cargar desde endpoint de Netlify Functions primero
+        console.log('📡 Intentando cargar desde Netlify Functions...');
         const netlifyResponse = await fetch('/.netlify/functions/get-config');
+        console.log('📊 Respuesta de Netlify Functions:', netlifyResponse.status, netlifyResponse.statusText);
+        
         if (netlifyResponse.ok) {
           const config = await netlifyResponse.json();
+          console.log('✅ Configuración cargada desde Netlify:', config);
+          
           emailjsConfig = {
             publicKey: config.EMAILJS_PUBLIC_KEY,
             serviceId: config.EMAILJS_SERVICE_ID,
             templateId: config.EMAILJS_TEMPLATE_ID,
             contactEmail: config.CONTACT_EMAIL || 'edufoxmind@gmail.com'
           };
+          
+          console.log('✅ EmailJS Config final:', emailjsConfig);
         } else {
-          throw new Error('Netlify functions not available');
+          throw new Error('Netlify functions not available - Status: ' + netlifyResponse.status);
         }
       } catch (error) {
+        console.warn('⚠️ Error cargando desde Netlify Functions:', error);
+        
         // Fallback: intentar cargar desde .env local
         try {
+          console.log('🔄 Intentando fallback desde .env local...');
           const response = await fetch('.env');
           const envText = await response.text();
           const envLines = envText.split('\n');
@@ -231,8 +243,10 @@
               emailjsConfig.contactEmail = line.split('=')[1].trim();
             }
           });
+          
+          console.log('📁 Configuración cargada desde .env local:', emailjsConfig);
         } catch (envError) {
-          console.warn('No se pudo cargar la configuración desde .env local');
+          console.error('❌ No se pudo cargar la configuración desde .env local:', envError);
           // Configuración por defecto para desarrollo
           emailjsConfig = {
             publicKey: '',

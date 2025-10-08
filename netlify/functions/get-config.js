@@ -18,11 +18,21 @@ exports.handler = async (event, context) => {
     };
 
     // Verificar que las variables estén configuradas
-    if (!config.EMAILJS_PUBLIC_KEY || !config.EMAILJS_SERVICE_ID || !config.EMAILJS_TEMPLATE_ID) {
+    const missingVars = [];
+    if (!config.EMAILJS_PUBLIC_KEY) missingVars.push('EMAILJS_PUBLIC_KEY');
+    if (!config.EMAILJS_SERVICE_ID) missingVars.push('EMAILJS_SERVICE_ID');
+    if (!config.EMAILJS_TEMPLATE_ID) missingVars.push('EMAILJS_TEMPLATE_ID');
+    
+    if (missingVars.length > 0) {
+      console.log('Missing environment variables:', missingVars);
+      console.log('Available env vars:', Object.keys(process.env).filter(key => key.includes('EMAILJS')));
+      
       return {
         statusCode: 500,
         body: JSON.stringify({ 
-          error: 'EmailJS configuration not properly set up. Please configure environment variables in Netlify.' 
+          error: 'EmailJS configuration not properly set up. Please configure environment variables in Netlify.',
+          missing: missingVars,
+          debug: 'Check Netlify Site Settings > Environment variables'
         })
       };
     }
