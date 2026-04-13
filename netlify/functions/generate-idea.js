@@ -1,6 +1,16 @@
 // Netlify Functions corre en Node 18+, fetch está disponible globalmente.
 // Si tu entorno no tuviera fetch, podrías usar undici: npm i undici y luego: const { fetch } = require('undici');
 
+function stripMarkdownCodeFence(value) {
+  if (typeof value !== 'string') return '';
+
+  return value
+    .trim()
+    .replace(/^```(?:html)?\s*/i, '')
+    .replace(/\s*```$/, '')
+    .trim();
+}
+
 exports.handler = async (event) => {
   try {
     if (event.httpMethod !== 'POST') {
@@ -59,7 +69,7 @@ exports.handler = async (event) => {
     }
 
     const data = JSON.parse(text);
-    const html = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const html = stripMarkdownCodeFence(data?.candidates?.[0]?.content?.parts?.[0]?.text || '');
 
     return {
       statusCode: 200,
