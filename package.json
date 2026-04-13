@@ -3,9 +3,20 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "dev": "netlify dev"
+    "dev": "netlify dev",
+    "build:css": "npx @tailwindcss/cli -i ./assets/css/source.css -o ./assets/css/main.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./assets/css/source.css -o ./assets/css/main.css --watch",
+    "lint": "node -e \"console.log('No linter configured yet for landing-page-foxmind')\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "netlify-cli": "^23.5.1"
+    "@vitest/coverage-v8": "^4.0.7",
+    "@tailwindcss/cli": "^4.1.6",
+    "jsdom": "^26.1.0",
+    "netlify-cli": "^23.5.1",
+    "tailwindcss": "^4.1.6",
+    "vitest": "^4.0.7"
   }
 }
