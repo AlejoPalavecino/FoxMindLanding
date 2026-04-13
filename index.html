@@ -37,6 +37,65 @@
     }
     .animate-fadeIn { animation: fadeIn 0.5s ease-in-out forwards; }
 
+    .idea-loading {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(217, 237, 247, 0.95), rgba(255, 255, 255, 0.98));
+      border: 1px solid rgba(13, 71, 161, 0.12);
+      box-shadow: 0 14px 30px rgba(13, 71, 161, 0.08);
+    }
+
+    .idea-loading__spinner {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      border: 4px solid rgba(13, 71, 161, 0.18);
+      border-top-color: #FD7F02;
+      border-right-color: #0D47A1;
+      animation: spin 1s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .idea-loading__title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0D47A1;
+    }
+
+    .idea-loading__copy {
+      margin-top: 4px;
+      color: #4B5563;
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+
+    .idea-loading__steps {
+      display: inline-flex;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .idea-loading__steps span {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #FD7F02;
+      opacity: 0.25;
+      animation: loading-bounce 1.2s infinite ease-in-out;
+    }
+
+    .idea-loading__steps span:nth-child(2) { animation-delay: 0.15s; }
+    .idea-loading__steps span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes loading-bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.25; }
+      40% { transform: translateY(-4px); opacity: 1; }
+    }
+
     /* Animación de pulso para la pestaña activa */
     @keyframes pulse-orange {
       0% {
@@ -269,6 +328,8 @@
     // Cargar configuración al inicio
     loadEmailJSConfig();
   </script>
+
+  <script src="assets/js/idea-loading.js"></script>
 
   <title>FoxMind - Educación Inclusiva Potenciada por IA</title>
 </head>
@@ -1236,9 +1297,15 @@
 
       // --- Función Genérica para llamar a la API de Gemini ---
 async function callGemini(prompt, resultContainer, button) {
-    resultContainer.innerHTML = '<div class="p-6 text-center">Cargando…</div>';
+    const loadingUi = window.FoxMindIdeaLoading;
+    const originalButtonContent = button ? button.innerHTML : '';
+
+    resultContainer.innerHTML = loadingUi?.createIdeaLoadingMarkup?.() || '<div class="p-6 text-center">Cargando...</div>';
     resultContainer.classList.remove('hidden');
-    button?.setAttribute('disabled', 'true');
+    if (button) {
+      button.setAttribute('disabled', 'true');
+      button.innerHTML = loadingUi?.getIdeaLoadingButtonLabel?.() || 'GENERANDO IDEA...';
+    }
 
     try {
       // En local con Netlify CLI y en producción el path es el mismo:
@@ -1258,7 +1325,10 @@ async function callGemini(prompt, resultContainer, button) {
       console.error(err);
       resultContainer.innerHTML = '<p>Error al generar contenido.</p>';
     } finally {
-      button?.removeAttribute('disabled');
+      if (button) {
+        button.removeAttribute('disabled');
+        button.innerHTML = originalButtonContent;
+      }
     }
   }
 
