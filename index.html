@@ -1,1271 +1,177 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Google Fonts: Poppins y Lato -->
+  <meta name="description" content="FoxMind ayuda a escuelas y docentes con IA inclusiva y seguimiento accionable." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://foxmind.ar/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FoxMind | Educación inclusiva potenciada por IA" />
+  <meta property="og:description" content="Herramientas adaptativas y seguimiento para docentes y familias." />
+  <meta property="og:url" content="https://foxmind.ar/" />
+  <meta property="og:image" content="https://foxmind.ar/assets/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FoxMind | Educación inclusiva potenciada por IA" />
+  <meta name="twitter:description" content="Landing de conversión para educación inclusiva." />
+  <meta name="twitter:image" content="https://foxmind.ar/assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="assets/ZorroH.png" />
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js para animación -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-  <!-- Configuración de Tailwind y Estilos Personalizados -->
-  <style>
-    /* Estilos para el spinner de carga */
-    .spinner {
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border-left-color: #0D47A1; /* Azul principal */
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    /* Animación para aparición suave de contenido */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    .animate-fadeIn { animation: fadeIn 0.5s ease-in-out forwards; }
-
-    /* Animación de pulso para la pestaña activa */
-    @keyframes pulse-orange {
-      0% {
-        box-shadow: 0 0 0 0 rgba(253, 127, 2, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 10px rgba(253, 127, 2, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(253, 127, 2, 0);
-      }
-    }
-    .tab-button.active {
-      animation: pulse-orange 2s infinite;
-    }
-
-    /* Estilos para el Botón Animado */
-    .animated-button {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 16px 36px;
-      border: 4px solid;
-      border-color: transparent;
-      font-size: 16px;
-      background-color: inherit;
-      border-radius: 100px;
-      font-weight: 600;
-      color: #FD7F02;
-      box-shadow: 0 0 0 2px #FD7F02;
-      cursor: pointer;
-      overflow: hidden;
-      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    .animated-button svg {
-      position: absolute;
-      width: 24px;
-      fill: #FD7F02;
-      z-index: 9;
-      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    .animated-button .arr-1 {
-      right: 16px;
-    }
-
-    .animated-button .arr-2 {
-      left: -25%;
-    }
-
-    .animated-button .circle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 20px;
-      height: 20px;
-      background-color: #FD7F02;
-      border-radius: 50%;
-      opacity: 0;
-      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    .animated-button .text {
-      position: relative;
-      z-index: 1;
-      transform: translateX(-12px);
-      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-
-    .animated-button:hover {
-      box-shadow: 0 0 0 12px transparent;
-      color: #ffffff;
-      border-radius: 12px;
-    }
-
-    .animated-button:hover .arr-1 {
-      right: -25%;
-    }
-
-    .animated-button:hover .arr-2 {
-      left: 16px;
-    }
-
-    .animated-button:hover .text {
-      transform: translateX(12px);
-    }
-
-    .animated-button:hover svg {
-      fill: #ffffff;
-    }
-
-    .animated-button:active {
-      scale: 0.95;
-      box-shadow: 0 0 0 4px #FD7F02;
-    }
-
-    .animated-button:hover .circle {
-      width: 220px;
-      height: 220px;
-      opacity: 1;
-    }
-    
-    /* Animación de gradiente para el fondo de la sección Nosotros */
-    @keyframes gradient-animation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .animated-gradient-bg {
-      background: linear-gradient(-45deg, #0b3c79, #0D47A1, #1E88E5, #42A5F5);
-      background-size: 400% 400%;
-      animation: gradient-animation 15s ease infinite;
-    }
-  </style>
-
-  <script>
-    // Configuración extendida de Tailwind CSS
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            // Fuentes personalizadas para un fácil acceso
-            poppins: ['Poppins', 'sans-serif'],
-            lato: ['Lato', 'sans-serif'],
-          },
-          colors: {
-            // Paleta de colores del proyecto
-            'foxmind-orange': '#FD7F02',
-            'foxmind-blue': {
-              'light': '#D9EDF7',
-              'DEFAULT': '#0D47A1',
-              'dark': '#0b3c79',
-            },
-            'foxmind-green': {
-              'light': '#E8F5E9',
-              'DEFAULT': '#1B5E20',
-              'dark': '#144d19',
-            },
-             'foxmind-yellow': '#FDEBD0',
-          }
-        },
-      },
-    };
-  </script>
-
-  <!-- EmailJS para envío de formularios -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script type="text/javascript">
-    // Configuración de EmailJS desde variables de entorno
-    let emailjsConfig = {
-      publicKey: '',
-      serviceId: '',
-      templateId: '',
-      contactEmail: 'edufoxmind@gmail.com'
-    };
-
-    // Función para cargar configuración
-    async function loadEmailJSConfig() {
-      console.log('🔄 Iniciando carga de configuración EmailJS...');
-      
-      try {
-        // Intentar cargar desde endpoint de Netlify Functions primero
-        console.log('📡 Intentando cargar desde Netlify Functions...');
-        const netlifyResponse = await fetch('/.netlify/functions/get-config');
-        console.log('📊 Respuesta de Netlify Functions:', netlifyResponse.status, netlifyResponse.statusText);
-        
-        if (netlifyResponse.ok) {
-          const config = await netlifyResponse.json();
-          console.log('✅ Configuración cargada desde Netlify:', config);
-          
-          emailjsConfig = {
-            publicKey: config.EMAILJS_PUBLIC_KEY,
-            serviceId: config.EMAILJS_SERVICE_ID,
-            templateId: config.EMAILJS_TEMPLATE_ID,
-            contactEmail: config.CONTACT_EMAIL || 'edufoxmind@gmail.com'
-          };
-          
-          console.log('✅ EmailJS Config final:', emailjsConfig);
-        } else {
-          throw new Error('Netlify functions not available - Status: ' + netlifyResponse.status);
-        }
-      } catch (error) {
-        console.warn('⚠️ Error cargando desde Netlify Functions:', error);
-        
-        // Fallback: intentar cargar desde .env local
-        try {
-          console.log('🔄 Intentando fallback desde .env local...');
-          const response = await fetch('.env');
-          const envText = await response.text();
-          const envLines = envText.split('\n');
-          
-          envLines.forEach(line => {
-            if (line.includes('EMAILJS_PUBLIC_KEY=')) {
-              emailjsConfig.publicKey = line.split('=')[1].trim();
-            } else if (line.includes('EMAILJS_SERVICE_ID=')) {
-              emailjsConfig.serviceId = line.split('=')[1].trim();
-            } else if (line.includes('EMAILJS_TEMPLATE_ID=')) {
-              emailjsConfig.templateId = line.split('=')[1].trim();
-            } else if (line.includes('CONTACT_EMAIL=')) {
-              emailjsConfig.contactEmail = line.split('=')[1].trim();
-            }
-          });
-          
-          console.log('📁 Configuración cargada desde .env local:', emailjsConfig);
-        } catch (envError) {
-          console.error('❌ No se pudo cargar la configuración desde .env local:', envError);
-          // Configuración por defecto para desarrollo
-          emailjsConfig = {
-            publicKey: '',
-            serviceId: '',
-            templateId: '',
-            contactEmail: 'edufoxmind@gmail.com'
-          };
-        }
-      }
-      
-      // Inicializar EmailJS con la clave pública si está disponible
-      if (emailjsConfig.publicKey && emailjsConfig.publicKey !== 'your_public_key_here' && emailjsConfig.publicKey !== '') {
-        emailjs.init(emailjsConfig.publicKey);
-        console.log('EmailJS inicializado con clave:', emailjsConfig.publicKey);
-      } else {
-        console.warn('EmailJS no se pudo inicializar, clave pública no válida:', emailjsConfig.publicKey);
-      }
-    }
-
-    // Cargar configuración al inicio
-    loadEmailJSConfig();
-  </script>
-
-  <title>FoxMind - Educación Inclusiva Potenciada por IA</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <title>FoxMind | Landing para educación inclusiva con IA</title>
 </head>
-<body class="antialiased bg-white text-gray-800 font-lato">
+<body>
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
 
-  <!-- ========== 1. Navbar ========== -->
-  <header id="navbar" class="fixed inset-x-0 top-0 z-50 py-3 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
-      <!-- Logo -->
-      <a href="#inicio" aria-label="Ir a inicio">
-        <img src="assets/FoxMind.png" alt="Logo FoxMind" class="h-12 w-auto" />
-      </a>
-
-      <!-- Navegación de Escritorio -->
-      <nav class="hidden md:flex items-center space-x-2">
-        <a href="#inicio" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-foxmind-orange transition-colors">INICIO</a>
-        <a href="#funciones" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-foxmind-orange transition-colors">FUNCIONES</a>
-        <a href="#nosotros" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-foxmind-orange transition-colors">NOSOTROS</a>
-        <a href="#contacto" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-foxmind-orange transition-colors">CONTACTO</a>
-        <a href="#generador-ideas" class="ml-4 px-5 py-2 text-sm font-poppins font-bold text-white rounded-full bg-foxmind-orange hover:bg-opacity-90 transform hover:scale-105 transition">
-          Probar IA
-        </a>
-      </nav>
-
-      <!-- Botón Hamburguesa (Móvil) -->
-      <button id="mobile-menu-button" class="md:hidden text-gray-800 focus:outline-none" aria-label="Abrir menú" aria-expanded="false">
-        <svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-      </button>
-    </div>
-
-    <!-- Menú Móvil -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg mt-2">
-      <nav class="px-6 py-4 space-y-3">
-        <a href="#inicio" class="block px-4 py-2 text-gray-800 font-semibold rounded-lg hover:bg-foxmind-blue-light">INICIO</a>
-        <a href="#funciones" class="block px-4 py-2 text-gray-800 font-semibold rounded-lg hover:bg-foxmind-blue-light">FUNCIONES</a>
-        <a href="#nosotros" class="block px-4 py-2 text-gray-800 font-semibold rounded-lg hover:bg-foxmind-blue-light">NOSOTROS</a>
-        <a href="#contacto" class="block px-4 py-2 text-gray-800 font-semibold rounded-lg hover:bg-foxmind-blue-light">CONTACTO</a>
-        <a href="#generador-ideas" class="block mt-4 text-center px-4 py-3 text-white font-bold bg-foxmind-orange rounded-lg hover:bg-opacity-90">PROBAR IA</a>
+  <header id="site-header" class="site-header">
+    <div class="container nav-wrapper">
+      <a href="#inicio" class="brand-link"><img src="assets/FoxMind.png" alt="Logo de FoxMind" width="160" height="56" /></a>
+      <button id="mobile-menu-button" class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">Menú</button>
+      <nav id="primary-navigation" class="main-nav" aria-label="Navegación principal">
+        <a href="#inicio">Inicio</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#capacidades">Capacidades</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#demo-ia">Demo IA</a>
+        <a href="#faq">FAQ</a>
+        <a class="cta-link" href="#contacto">Solicitar demo</a>
       </nav>
     </div>
   </header>
 
-  <!-- ========== 2. Hero Section ========== -->
-  <section id="inicio" class="relative pt-24 md:pt-32 lg:pt-40 pb-20 bg-foxmind-blue-light">
-    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <!-- Contenido de texto -->
-        <div class="text-center lg:text-left">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-poppins font-extrabold text-gray-900 leading-tight">
-                Educación <span class="text-foxmind-orange">inclusiva</span> potenciada por IA.
-            </h1>
-            <p class="mt-6 text-xl md:text-2xl text-gray-600 max-w-xl mx-auto lg:mx-0">
-                Transformamos el aprendizaje con herramientas inteligentes que se adaptan a cada estudiante, creando experiencias únicas y motivadoras para docentes y familias.
-            </p>
-            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
-                <button onclick="window.location.href='#contacto'" class="animated-button font-poppins">
-                  <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
-                    ></path>
-                  </svg>
-                  <span class="text">Solicitar Demo</span>
-                  <span class="circle"></span>
-                  <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
-                    ></path>
-                  </svg>
-                </button>
-                <a href="#funciones" class="px-8 py-4 font-poppins font-bold text-foxmind-blue-dark bg-white rounded-lg shadow-lg hover:bg-gray-50 transform hover:scale-105 transition">
-                    Ver Funciones
-                </a>
-            </div>
+  <main id="main-content">
+    <section id="inicio" class="hero section">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Plataforma educativa inclusiva</p>
+          <h1>Educación inclusiva potenciada por IA para escuelas y docentes</h1>
+          <p class="hero-copy">FoxMind convierte desafíos reales de aula en actividades adaptadas, medibles y accionables.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contacto">Quiero una demo</a>
+            <a class="btn btn-secondary" href="#capacidades">Ver capacidades</a>
+          </div>
         </div>
-        <!-- Imagen -->
-        <div class="flex justify-center">
-            <img src="assets/fondo-hero.png" alt="Ilustración de la mascota de FoxMind, un zorro, usando una laptop" class="rounded-2xl shadow-2xl w-full max-w-md lg:max-w-full">
-        </div>
-    </div>
-  </section>
+        <figure><img src="assets/fondo-hero.png" alt="Zorro mascota de FoxMind acompañando a una docente" width="720" height="620" /></figure>
+      </div>
+    </section>
 
-  <!-- ========== 3. Sección Reto Educativo ========== -->
-  <section id="reto-educacion" class="py-20 px-6">
-    <div class="max-w-7xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-        El Reto de la Educación Inclusiva es Real
-      </h2>
-      <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-        Cada estudiante es único, pero la personalización a gran escala es uno de los mayores desafíos para los educadores hoy en día.
-      </p>
-      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Card 1: Unicidad -->
-        <div class="bg-foxmind-blue-light rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-transform duration-300">
-          <h3 class="text-2xl font-poppins font-bold text-foxmind-blue uppercase">UNICIDAD</h3>
-          <p class="mt-2 text-xl font-poppins font-semibold text-gray-900">Cada Estudiante es Único</p>
-          <p class="mt-2 text-lg text-gray-700">Los alumnos llegan con ritmos, intereses y necesidades diferentes que requieren adaptaciones.</p>
-        </div>
-        <!-- Card 2: Dificultad -->
-        <div class="bg-foxmind-yellow rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-transform duration-300">
-          <h3 class="text-2xl font-poppins font-bold text-amber-700 uppercase">DIFICULTAD</h3>
-          <p class="mt-2 text-xl font-poppins font-semibold text-gray-900">Escalabilidad de la Personalización</p>
-          <p class="mt-2 text-lg text-gray-700">Enseñar a medida a decenas de alumnos pone a prueba los recursos docentes.</p>
-        </div>
-        <!-- Card 3: Solución -->
-        <div class="bg-foxmind-green-light rounded-xl shadow-lg p-8 transform hover:-translate-y-2 transition-transform duration-300">
-          <h3 class="text-2xl font-poppins font-bold text-foxmind-green uppercase">SOLUCIÓN</h3>
-          <p class="mt-2 text-xl font-poppins font-semibold text-gray-900">Herramientas Adaptativas</p>
-          <p class="mt-2 text-lg text-gray-700">Plataforma inteligente que ajusta contenidos y ejercicios según el perfil de cada usuario.</p>
+    <section id="beneficios" class="section section-alt">
+      <div class="container">
+        <h2>Del problema al impacto en una ruta clara de conversión</h2>
+        <p class="section-intro">Diseñamos la experiencia para que cada visitante entienda en segundos por qué FoxMind mejora la adopción en el aula.</p>
+        <div class="card-grid">
+          <article class="card card-blue"><h3>Unicidad</h3><p>Cada estudiante aprende de forma distinta.</p></article>
+          <article class="card card-yellow"><h3>Escalabilidad</h3><p>La personalización manual no escala.</p></article>
+          <article class="card card-green"><h3>Solución</h3><p>FoxMind adapta contenido y seguimiento.</p></article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ========== 4. Sección Funciones ========== -->
-  <section id="funciones" class="bg-gray-50 py-20 px-6">
-    <div class="max-w-7xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-        FoxMind: Educación Personalizada para Todos
-      </h2>
-      <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-        Nuestra plataforma aprovecha la IA para crear rutas de aprendizaje únicas. Creamos experiencias que motivan, miden el progreso y facilitan el acompañamiento.
-      </p>
-      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Card 1 -->
-        <div class="bg-white rounded-xl shadow-lg p-8 text-center flex flex-col">
-          <div class="flex-shrink-0">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-foxmind-orange flex items-center justify-center">
-              <svg class="h-12 w-12 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            </div>
+    <section id="capacidades" class="section">
+      <div class="container">
+        <h2>Capacidades principales para mejorar adopción educativa</h2>
+        <div class="tabs" data-tabs>
+          <div class="tabs-list" role="tablist" aria-label="Capacidades de FoxMind">
+            <button id="tab-1" class="tab-button" role="tab" aria-selected="true" aria-controls="panel-1">Biblioteca DUA</button>
+            <button id="tab-2" class="tab-button" role="tab" aria-selected="false" aria-controls="panel-2" tabindex="-1">Motor IA</button>
+            <button id="tab-3" class="tab-button" role="tab" aria-selected="false" aria-controls="panel-3" tabindex="-1">Reportes</button>
           </div>
-          <div class="flex flex-col flex-grow">
-            <h3 class="text-2xl font-poppins font-bold text-gray-900 uppercase min-h-[64px]">Tests Adaptativos</h3>
-            <p class="mt-2 text-lg text-gray-700">Diagnósticos inteligentes que se ajustan al nivel de cada usuario, identificando fortalezas y áreas de mejora.</p>
-          </div>
-        </div>
-        <!-- Card 2 -->
-        <div class="bg-white rounded-xl shadow-lg p-8 text-center flex flex-col">
-          <div class="flex-shrink-0">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-foxmind-orange flex items-center justify-center">
-              <svg class="h-12 w-12 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-            </div>
-          </div>
-          <div class="flex flex-col flex-grow">
-            <h3 class="text-2xl font-poppins font-bold text-gray-900 uppercase min-h-[64px]">Feedback Instantáneo</h3>
-            <p class="mt-2 text-lg text-gray-700">Refuerzo positivo y correcciones en tiempo real para potenciar la motivación y el aprendizaje continuo.</p>
-          </div>
-        </div>
-        <!-- Card 3 -->
-        <div class="bg-white rounded-xl shadow-lg p-8 text-center flex flex-col">
-          <div class="flex-shrink-0">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-foxmind-orange flex items-center justify-center">
-              <svg class="h-12 w-12 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-            </div>
-          </div>
-          <div class="flex flex-col flex-grow">
-            <h3 class="text-2xl font-poppins font-bold text-gray-900 uppercase min-h-[64px]">Panel de Control</h3>
-            <p class="mt-2 text-lg text-gray-700">Visualiza el progreso individual y grupal desde un mismo lugar, con reportes claros para familias y docentes.</p>
-          </div>
+          <article id="panel-1" class="tab-panel" role="tabpanel" aria-labelledby="tab-1">
+            <img src="assets/Imagen 01.png" alt="Biblioteca inclusiva" width="560" height="360" loading="lazy" />
+            <div><h3>Biblioteca de contenidos accesibles</h3><p>Más de 150 recursos diseñados bajo DUA.</p></div>
+          </article>
+          <article id="panel-2" class="tab-panel" role="tabpanel" aria-labelledby="tab-2" hidden>
+            <img src="assets/Imagen 02.png" alt="Motor IA" width="560" height="360" loading="lazy" />
+            <div><h3>Motor de IA para personalización</h3><p>Ajusta dificultad según desempeño.</p></div>
+          </article>
+          <article id="panel-3" class="tab-panel" role="tabpanel" aria-labelledby="tab-3" hidden>
+            <img src="assets/Imagen 03.png" alt="Reportes en tiempo real" width="560" height="360" loading="lazy" />
+            <div><h3>Reportes accionables</h3><p>Datos diarios para coordinación con familias.</p></div>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ========== 5. Sección Pasos ========== -->
-  <section id="pasos" class="py-20 px-6 bg-gray-50">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-          Un Proceso Simple y Efectivo
-        </h2>
-        <p class="mt-2 text-xl text-gray-600">Comienza a transformar la educación en 4 sencillos pasos.</p>
+    <section id="como-funciona" class="section section-alt">
+      <div class="container">
+        <h2>Cómo se implementa FoxMind en 4 pasos</h2>
+        <ol class="steps-grid">
+          <li><h3>1. Diagnóstico inicial</h3><p>Contexto pedagógico y objetivos.</p></li>
+          <li><h3>2. Configuración guiada</h3><p>Rutas de actividad por grado y área.</p></li>
+          <li><h3>3. Ejecución en aula</h3><p>Actividades adaptadas y feedback.</p></li>
+          <li><h3>4. Seguimiento continuo</h3><p>Ajustes con datos de progreso.</p></li>
+        </ol>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Paso 1 -->
-        <div class="relative bg-white p-8 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          <div class="absolute -top-8 -right-8 text-9xl font-black text-gray-100 opacity-80">01</div>
-          <div class="relative z-10 flex items-center gap-6">
-            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-xl bg-foxmind-blue-light text-foxmind-blue">
-               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div>
-              <h3 class="text-2xl font-poppins font-bold text-gray-900">Registro Inicial</h3>
-              <p class="mt-1 text-lg text-gray-700">Crea perfiles para instituciones, docentes y familias.</p>
-            </div>
-          </div>
-        </div>
-        <!-- Paso 2 -->
-        <div class="relative bg-white p-8 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          <div class="absolute -top-8 -right-8 text-9xl font-black text-gray-100 opacity-80">02</div>
-          <div class="relative z-10 flex items-center gap-6">
-            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-xl bg-foxmind-blue-light text-foxmind-blue">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 17a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2Z"/><path d="M6 15v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="8" cy="11" r="1"/><circle cx="16" cy="11" r="1"/></svg>
-            </div>
-            <div>
-              <h3 class="text-2xl font-poppins font-bold text-gray-900">Diagnóstico Gamificado</h3>
-              <p class="mt-1 text-lg text-gray-700">La IA evalúa el nivel y estilo de aprendizaje de cada alumno.</p>
-            </div>
-          </div>
-        </div>
-        <!-- Paso 3 -->
-        <div class="relative bg-white p-8 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          <div class="absolute -top-8 -right-8 text-9xl font-black text-gray-100 opacity-80">03</div>
-          <div class="relative z-10 flex items-center gap-6">
-            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-xl bg-foxmind-blue-light text-foxmind-blue">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-            </div>
-            <div>
-              <h3 class="text-2xl font-poppins font-bold text-gray-900">Rutas Personalizadas</h3>
-              <p class="mt-1 text-lg text-gray-700">Se generan secuencias de actividades adaptadas a cada perfil.</p>
-            </div>
-          </div>
-        </div>
-        <!-- Paso 4 -->
-        <div class="relative bg-white p-8 rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-          <div class="absolute -top-8 -right-8 text-9xl font-black text-gray-100 opacity-80">04</div>
-          <div class="relative z-10 flex items-center gap-6">
-            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-xl bg-foxmind-blue-light text-foxmind-blue">
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-            </div>
-            <div>
-              <h3 class="text-2xl font-poppins font-bold text-gray-900">Monitoreo y Refuerzo</h3>
-              <p class="mt-1 text-lg text-gray-700">Accede a reportes en tiempo real y coordina el apoyo.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ========== 6. Sección Generador de Ideas ========== -->
-  <section id="generador-ideas" class="bg-foxmind-blue-light py-20 px-6">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-foxmind-blue">
-        Generador de Ideas para Clases Inclusivas
-      </h2>
-      <p class="mt-4 text-xl text-gray-700">
-        Prueba el poder de nuestra IA. Describe una necesidad y obtén al instante una idea creativa para una actividad de clase.
-      </p>
-      <div class="mt-8 bg-white rounded-2xl shadow-xl p-8">
-        <form id="idea-form" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label for="subject" class="block text-left font-poppins font-semibold text-gray-900">Tema</label>
-              <input type="text" id="subject" placeholder="Ej: El ciclo del agua" class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-blue shadow-inner" />
-            </div>
-            <div>
-              <label for="grade" class="block text-left font-poppins font-semibold text-gray-900">Grado Escolar</label>
-              <input type="text" id="grade" placeholder="Ej: 4° de Primaria" class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-blue shadow-inner" />
-            </div>
+    <section id="demo-ia" class="section">
+      <div class="container narrow">
+        <h2>Probá una idea de clase inclusiva en segundos</h2>
+        <form id="idea-form" class="surface" novalidate>
+          <div class="form-grid">
+            <div class="field"><label for="idea-subject">Tema</label><input id="idea-subject" name="subject" type="text" maxlength="80" /></div>
+            <div class="field"><label for="idea-grade">Grado</label><input id="idea-grade" name="grade" type="text" maxlength="60" /></div>
           </div>
-          <div>
-            <label for="challenge" class="block text-left font-poppins font-semibold text-gray-900">Desafío a Atender</label>
-            <input type="text" id="challenge" placeholder="Ej: Dificultad para mantener la atención" class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-blue shadow-inner" />
-          </div>
-          <button type="button" id="generate-idea-btn" class="w-full flex justify-center items-center gap-3 bg-foxmind-blue text-white font-poppins font-bold rounded-lg px-6 py-3 hover:bg-foxmind-blue-dark transition-transform transform hover:scale-105">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-            GENERAR IDEA DE ACTIVIDAD
-          </button>
+          <div class="field"><label for="idea-challenge">Desafío pedagógico</label><textarea id="idea-challenge" name="challenge" rows="4" maxlength="280" required></textarea></div>
+          <button id="idea-submit" class="btn btn-primary" type="submit">Generar idea segura</button>
+          <p id="idea-feedback" class="feedback" aria-live="polite"></p>
         </form>
-        <div id="idea-result" class="mt-6 text-left"></div>
+        <section id="idea-result" class="idea-result" aria-live="polite"></section>
       </div>
+    </section>
+
+    <section id="faq" class="section section-alt">
+      <div class="container">
+        <h2>Señales de confianza y respuestas a objeciones frecuentes</h2>
+        <div class="faq-grid">
+          <article><h3>¿FoxMind reemplaza al docente?</h3><p>No, lo asiste con recomendaciones.</p></article>
+          <article><h3>¿Sirve para contextos diversos?</h3><p>Sí, está orientado a DUA.</p></article>
+          <article><h3>¿Qué respaldo tiene el equipo?</h3><p>Experiencia técnica y pedagógica.</p></article>
+          <article><h3>¿Cómo se mide impacto?</h3><p>Con reportes y trazabilidad.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" class="section">
+      <div class="container narrow">
+        <h2>Solicitá una demo personalizada</h2>
+        <form id="contact-form" class="surface" novalidate>
+          <input type="hidden" id="submitted-at" name="submittedAt" />
+          <div class="honeypot" aria-hidden="true"><label for="website">No completar</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off" /></div>
+          <div class="form-grid">
+            <div class="field"><label for="full-name">Nombre completo</label><input id="full-name" name="fullName" type="text" minlength="3" maxlength="80" required /><p class="field-error" data-error-for="full-name"></p></div>
+            <div class="field"><label for="position">Cargo</label><select id="position" name="position" required><option value="">Seleccioná una opción</option><option value="docente">Docente</option><option value="directivo">Directivo</option><option value="familiar">Familiar</option><option value="otro">Otro</option></select><p class="field-error" data-error-for="position"></p></div>
+          </div>
+          <div class="field"><label for="school">Escuela o institución</label><input id="school" name="school" type="text" minlength="3" maxlength="120" required /><p class="field-error" data-error-for="school"></p></div>
+          <div class="field"><label for="email">Email de contacto</label><input id="email" name="email" type="email" maxlength="120" required /><p class="field-error" data-error-for="email"></p></div>
+          <div class="field"><label for="message">Mensaje (opcional)</label><textarea id="message" name="message" rows="4" maxlength="500"></textarea><p class="hint">Máximo 500 caracteres.</p></div>
+          <button id="contact-submit" class="btn btn-primary" type="submit">Quiero ser de los primeros</button>
+          <p id="contact-feedback" class="feedback" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><img src="assets/FoxMindBlanco.png" alt="Logo FoxMind en blanco" width="170" height="64" loading="lazy" /><p>Empoderando educación inclusiva con tecnología útil.</p></div>
+      <div><h2>Enlaces</h2><ul><li><a href="#inicio">Inicio</a></li><li><a href="#capacidades">Capacidades</a></li><li><a href="#demo-ia">Demo IA</a></li><li><a href="#contacto">Contacto</a></li></ul></div>
+      <div><h2>Contacto</h2><p><a href="mailto:edufoxmind@gmail.com">edufoxmind@gmail.com</a></p><p>+54 9 2625 557270</p><p>+54 9 2634 249750</p></div>
+      <div><h2>Redes</h2><p><a href="https://www.instagram.com/foxmind.ar/" target="_blank" rel="noopener noreferrer">Instagram FoxMind</a></p></div>
     </div>
-  </section>
-
-  <!-- ========== 7. Sección Características ========== -->
-  <section id="caracteristicas" class="py-20 px-6 bg-white">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-          Accesible desde lo Pedagógico pero también desde lo Tecnológico
-        </h2>
-        <p class="mt-2 text-xl text-gray-600">Todo lo que necesitas en un solo lugar.</p>
-      </div>
-      
-      <!-- Contenedor de Pestañas -->
-      <div id="tabs-container" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
-        <button data-tab="1" class="tab-button font-poppins font-semibold px-6 py-3 rounded-full text-sm md:text-base transition-colors duration-300">Biblioteca de Contenidos</button>
-        <button data-tab="2" class="tab-button font-poppins font-semibold px-6 py-3 rounded-full text-sm md:text-base transition-colors duration-300">Motor de IA</button>
-        <button data-tab="3" class="tab-button font-poppins font-semibold px-6 py-3 rounded-full text-sm md:text-base transition-colors duration-300">Reportes en Tiempo Real</button>
-        <button data-tab="4" class="tab-button font-poppins font-semibold px-6 py-3 rounded-full text-sm md:text-base transition-colors duration-300">Gamificación</button>
-        <button data-tab="5" class="tab-button font-poppins font-semibold px-6 py-3 rounded-full text-sm md:text-base transition-colors duration-300">Colaboración</button>
-      </div>
-
-      <!-- Contenido de las Pestañas -->
-      <div id="tabs-content-container" class="bg-gray-50 p-8 rounded-2xl shadow-inner">
-        <!-- Contenido Pestaña 1 -->
-        <div id="tab-content-1" class="tab-content grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 class="text-4xl font-poppins font-bold text-gray-900">📚 Biblioteca de Contenidos Accesibles</h3>
-            <p class="mt-4 text-2xl text-gray-700">+150 juegos educativos diseñados bajo Diseño Universal para el Aprendizaje (DUA), alineados al currículo primario argentino y cubriendo matemáticas, lengua, ciencias, sociedad y más.</p>
-          </div>
-          <img src="assets/Imagen 01.png" alt="Ilustración de niños usando la biblioteca de contenidos" class="rounded-lg shadow-xl" />
-        </div>
-        <!-- Contenido Pestaña 2 -->
-        <div id="tab-content-2" class="tab-content hidden grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 class="text-4xl font-poppins font-bold text-gray-900">🤖 Motor de IA para Personalización</h3>
-            <p class="mt-4 text-2xl text-gray-700">Algoritmo que analiza en tiempo real el desempeño de cada niño y ajusta dificultad y tipo de ejercicio para mantenerlo siempre en su “zona de desarrollo próximo”.</p>
-          </div>
-          <img src="assets/Imagen 02.png" alt="Ilustración de la mascota de FoxMind con un gráfico de IA" class="rounded-lg shadow-xl" />
-        </div>
-        <!-- Contenido Pestaña 3 -->
-        <div id="tab-content-3" class="tab-content hidden grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 class="text-4xl font-poppins font-bold text-gray-900">📊 Reportes en Tiempo Real</h3>
-            <p class="mt-4 text-2xl text-gray-700">Olvida los informes trimestrales. Obtén datos diarios sobre el tiempo de dedicación, las habilidades dominadas y las áreas que necesitan refuerzo para facilitar la comunicación con las familias.</p>
-          </div>
-          <img src="assets/Imagen 03.png" alt="Ilustración de una maestra viendo reportes con sus alumnos" class="rounded-lg shadow-xl" />
-        </div>
-        <!-- Contenido Pestaña 4 -->
-        <div id="tab-content-4" class="tab-content hidden grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 class="text-4xl font-poppins font-bold text-gray-900">🎮 Gamificación Motivacional</h3>
-            <p class="mt-4 text-2xl text-gray-700">Sistema de puntos, insignias y recompensas virtuales que incentiva la práctica constante y celebra los pequeños y grandes logros. Ideal para estudiantes que necesitan estímulos frecuentes.</p>
-          </div>
-          <img src="assets/Imagen 04.png" alt="Ilustración de niños celebrando con medallas y puntos" class="rounded-lg shadow-xl" />
-        </div>
-        <!-- Contenido Pestaña 5 -->
-        <div id="tab-content-5" class="tab-content hidden grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h3 class="text-4xl font-poppins font-bold text-gray-900">🤝 Herramientas de Colaboración</h3>
-            <p class="mt-4 text-2xl text-gray-700">Espacio seguro para que docentes, especialistas de apoyo y familias puedan compartir observaciones y coordinar estrategias de manera eficiente y centralizada.</p>
-          </div>
-          <img src="assets/Imagen 05.png" alt="Ilustración de un equipo colaborando en la plataforma" class="rounded-lg shadow-xl" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== 8. Sección Nosotros ========== -->
-  <section id="nosotros" class="relative animated-gradient-bg py-20 px-6 overflow-hidden">
-    <div class="relative z-10 max-w-5xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-white">
-          Conoce a Nuestro <span class="text-foxmind-blue-light">Equipo</span>
-        </h2>
-        <p class="mt-4 text-2xl text-white/90 max-w-3xl mx-auto">
-          Somos un equipo joven y comprometido con transformar la educación a través de la tecnología y la inclusión.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <!-- Miembro 1 -->
-        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center border border-white/20 transform hover:-translate-y-2 transition-transform duration-300">
-          <img src="assets/Alejosv.svg" alt="Foto de Alejo Palavecino" class="w-32 h-32 rounded-full mb-6 border-4 border-foxmind-blue-light mx-auto object-cover" />
-          <h3 class="font-poppins text-3xl font-bold text-white">Alejo Palavecino</h3>
-          <p class="font-poppins text-lg font-semibold text-foxmind-blue-light mb-4">Líder de Arquitectura Técnica</p>
-          <p class="text-gray-300 text-lg">Estudiante de Ing. en Sistemas (UTN). Apasionado por el desarrollo, bases de datos e IA. Lidera la arquitectura técnica para asegurar que la plataforma sea fluida y segura.</p>
-          <div class="mt-6">
-             <a href="https://www.linkedin.com/in/alejo-palavecino/" class="text-gray-300 hover:text-foxmind-blue-light transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-             </a>
-          </div>
-        </div>
-        <!-- Miembro 2 -->
-        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center border border-white/20 transform hover:-translate-y-2 transition-transform duration-300">
-          <img src="assets/lu.svg" alt="Foto de Lucía Domínguez" class="w-32 h-32 rounded-full mb-6 border-4 border-foxmind-blue-light mx-auto object-cover" />
-          <h3 class="font-poppins text-3xl font-bold text-white">Lucía Domínguez</h3>
-          <p class="font-poppins text-lg font-semibold text-foxmind-blue-light mb-4">Diseñadora de Experiencias Educativas</p>
-          <p class="text-gray-300 text-lg">Estudiante de Ing. en Sistemas (UTN). Apasionada por el diseño de experiencias interactivas. Imagina y diseña los juegos educativos, combinando creatividad y usabilidad.</p>
-          <div class="mt-6">
-             <a href="https://www.linkedin.com/in/lucia-mdominguez/" class="text-gray-300 hover:text-foxmind-blue-light transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-             </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-<!-- ========== 9. Sección Contacto ========== -->
-<section id="contacto" class="bg-gray-50 py-20 px-6">
-  <div class="max-w-4xl mx-auto text-center">
-    <h2 class="text-3xl md:text-4xl lg:text-5xl font-poppins font-bold text-gray-900">
-      ¿Listo para transformar la educación?
-    </h2>
-    <h3 class="text-2xl md:text-3xl font-poppins font-semibold text-foxmind-orange mt-2">
-      Sé de los primeros en probarlo
-    </h3>
-    <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-      Estamos desarrollando algo increíble. Completá el formulario y te sumaremos a la lista prioritaria para probar la plataforma.
-    </p>
-    
-    <!-- Agregamos beneficios para aumentar conversión -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-      <div class="bg-white rounded-lg p-4 shadow-sm">
-        <div class="text-foxmind-orange text-2xl mb-2">🚀</div>
-        <p class="text-sm font-semibold text-gray-700">Acceso temprano gratuito</p>
-      </div>
-      <div class="bg-white rounded-lg p-4 shadow-sm">
-        <div class="text-foxmind-orange text-2xl mb-2">📞</div>
-        <p class="text-sm font-semibold text-gray-700">Soporte personalizado</p>
-      </div>
-      <div class="bg-white rounded-lg p-4 shadow-sm">
-        <div class="text-foxmind-orange text-2xl mb-2">🎓</div>
-        <p class="text-sm font-semibold text-gray-700">Capacitación incluida</p>
-      </div>
-    </div>
-
-    <div class="mt-12 bg-white rounded-2xl shadow-xl p-8 max-w-3xl mx-auto">
-      <!-- novalidate para manejar mensajes custom -->
-      <form id="contact-form" class="space-y-6" novalidate>
-        <!-- Honeypot anti-bots (no lo tocan personas reales) -->
-        <div class="hidden" aria-hidden="true">
-          <label for="sitioWeb">No completar</label>
-          <input type="text" id="sitioWeb" name="sitioWeb" tabindex="-1" autocomplete="off" />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Nombre completo -->
-          <div>
-            <label for="fullName" class="block text-left font-poppins font-semibold text-gray-900">
-              Nombre completo
-            </label>
-            <input
-              type="text"
-              id="fullName"
-              name="fullName"
-              placeholder="Ej: Lucía Domínguez"
-              class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-orange shadow-inner"
-              required
-              autocomplete="name"
-              minlength="3"
-              pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]{3,60}$"
-              title="Usá solo letras, espacios, guiones o apóstrofes (mínimo 3 caracteres)."
-            />
-            <p class="mt-1 text-sm text-red-600 hidden" data-error-for="fullName"></p>
-          </div>
-
-          <!-- Tu cargo (select) -->
-          <div>
-            <label for="position" class="block text-left font-poppins font-semibold text-gray-900">
-              Tu cargo
-            </label>
-            <select
-              id="position"
-              name="position"
-              class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-foxmind-orange shadow-inner"
-              required
-              autocomplete="organization-title"
-            >
-              <option value="" selected disabled>Seleccioná tu cargo</option>
-              <option value="docente">Docente</option>
-              <option value="directivo">Directivo</option>
-              <option value="familiar">Familiar</option>
-              <option value="otro">Otro</option>
-            </select>
-            <p class="mt-1 text-sm text-red-600 hidden" data-error-for="position"></p>
-          </div>
-        </div>
-
-        <!-- Escuela -->
-        <div>
-          <label for="school" class="block text-left font-poppins font-semibold text-gray-900">
-            Nombre de la escuela
-          </label>
-          <input
-            type="text"
-            id="school"
-            name="school"
-            placeholder="Ej: Escuela N.º 1-234 Tomás Godoy Cruz"
-            class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-orange shadow-inner"
-            required
-            autocomplete="organization"
-            minlength="3"
-            title="Ingresá al menos 3 caracteres."
-          />
-          <p class="mt-1 text-sm text-red-600 hidden" data-error-for="school"></p>
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label for="email" class="block text-left font-poppins font-semibold text-gray-900">
-            Email de contacto
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="tu@ejemplo.com"
-            class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-orange shadow-inner"
-            required
-            autocomplete="email"
-            inputmode="email"
-          />
-          <p class="mt-1 text-sm text-red-600 hidden" data-error-for="email"></p>
-        </div>
-
-        <!-- Mensaje opcional para mayor contexto -->
-        <div>
-          <label for="message" class="block text-left font-poppins font-semibold text-gray-900">
-            Mensaje (opcional)
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            placeholder="Contanos qué necesidades específicas tenés o qué te gustaría lograr con FoxMind..."
-            rows="4"
-            class="mt-2 w-full border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-foxmind-orange shadow-inner resize-vertical"
-            maxlength="500"
-          ></textarea>
-          <p class="mt-1 text-xs text-gray-500">Máximo 500 caracteres</p>
-        </div>
-
-        <button
-          type="submit"
-          class="w-full bg-foxmind-orange text-white font-poppins font-bold rounded-lg px-6 py-4 hover:bg-orange-600 transition-all transform hover:scale-105 focus:ring-4 focus:ring-orange-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-        >
-          <span class="flex items-center justify-center">
-            <svg class="hidden loading-icon animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span class="button-text">QUIERO SER DE LOS PRIMEROS 🚀</span>
-          </span>
-        </button>
-
-        <!-- Mensaje solo para errores de validación -->
-        <p id="form-msg" class="mt-3 text-sm text-red-600 hidden" aria-live="polite"></p>
-      </form>
-    </div>
-  </div>
-
-  <!-- Validación accesible y amigable -->
-  <script>
-    // Función global para el modal
-    window.showModal = function(title, message) {
-      const modal = document.getElementById('notification-modal');
-      const modalTitle = document.getElementById('modal-title');
-      const modalMessage = document.getElementById('modal-message');
-      
-      if (modal && modalTitle && modalMessage) {
-        modalTitle.textContent = title;
-        modalMessage.textContent = message;
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('contact-form');
-      const fields = {
-        fullName: document.getElementById('fullName'),
-        position: document.getElementById('position'),
-        school: document.getElementById('school'),
-        email: document.getElementById('email'),
-        message: document.getElementById('message'),
-        honeypot: document.getElementById('sitioWeb'),
-      };
-      const formMsg = document.getElementById('form-msg');
-
-      const regexName = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]{3,60}$/;
-
-      function showError(input, message) {
-        const helper = form.querySelector(`[data-error-for="${input.id}"]`);
-        input.classList.remove('focus:ring-foxmind-orange');
-        input.classList.add('ring-2', 'ring-red-500');
-        input.setAttribute('aria-invalid', 'true');
-        if (helper) {
-          helper.textContent = message;
-          helper.classList.remove('hidden');
-        }
-      }
-
-      function clearError(input) {
-        const helper = form.querySelector(`[data-error-for="${input.id}"]`);
-        input.classList.remove('ring-2', 'ring-red-500');
-        input.removeAttribute('aria-invalid');
-        if (helper) {
-          helper.textContent = '';
-          helper.classList.add('hidden');
-        }
-      }
-
-      function validateFullName() {
-        const v = fields.fullName.value.trim();
-        if (!v) return 'Este campo es obligatorio.';
-        if (!regexName.test(v)) return 'Usá solo letras y espacios (mínimo 3 caracteres).';
-        return '';
-      }
-
-      function validatePosition() {
-        if (!fields.position.value) return 'Seleccioná una opción.';
-        return '';
-      }
-
-      function validateSchool() {
-        const v = fields.school.value.trim();
-        if (!v) return 'Este campo es obligatorio.';
-        if (v.length < 3) return 'Ingresá al menos 3 caracteres.';
-        return '';
-      }
-
-      function validateEmail() {
-        const el = fields.email;
-        if (!el.value.trim()) return 'Este campo es obligatorio.';
-        if (!el.checkValidity()) return 'Ingresá un email válido (ej: nombre@dominio.com).';
-        return '';
-      }
-
-      function validateHoneypot() {
-        return fields.honeypot && fields.honeypot.value ? 'Detección de spam.' : '';
-      }
-
-      // Limpiar error al escribir/cambiar
-      ['input', 'change', 'blur'].forEach(evt => {
-        form.addEventListener(evt, e => {
-          if (e.target && e.target.id && fields[e.target.id]) {
-            clearError(e.target);
-            // Solo limpiar mensaje si es de validación (rojo)
-            if (formMsg.classList.contains('text-red-600')) {
-              formMsg.textContent = '';
-              formMsg.classList.add('hidden');
-            }
-          }
-        });
-      });
-
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-
-        let firstInvalid = null;
-        // Limpiar mensaje de validación anterior
-        formMsg.textContent = '';
-        formMsg.classList.add('hidden');
-
-        // Ejecutar validaciones
-        const validations = [
-          { input: fields.fullName, error: validateFullName() },
-          { input: fields.position, error: validatePosition() },
-          { input: fields.school, error: validateSchool() },
-          { input: fields.email, error: validateEmail() },
-          { input: fields.honeypot, error: validateHoneypot() },
-        ];
-
-        // Mostrar errores
-        validations.forEach(v => {
-          clearError(v.input);
-          if (v.error) {
-            showError(v.input, v.error);
-            if (!firstInvalid) firstInvalid = v.input;
-          }
-        });
-
-        if (firstInvalid) {
-          firstInvalid.focus();
-          formMsg.textContent = 'Revisá los campos marcados en rojo y volvé a intentar.';
-          formMsg.classList.remove('hidden');
-          return;
-        }
-
-        // Limpiar mensaje de error si había alguno
-        formMsg.textContent = '';
-        formMsg.classList.add('hidden');
-
-        // Envío del formulario con EmailJS
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const buttonText = submitBtn.querySelector('.button-text');
-        const loadingIcon = submitBtn.querySelector('.loading-icon');
-        const originalText = buttonText.textContent;
-        
-        submitBtn.disabled = true;
-        buttonText.textContent = 'ENVIANDO...';
-        loadingIcon.classList.remove('hidden');
-        
-        // Verificar que la configuración esté cargada
-        console.log('Estado de emailjsConfig:', emailjsConfig);
-        
-        if (!emailjsConfig.serviceId || emailjsConfig.serviceId === 'your_service_id_here' || emailjsConfig.serviceId === '') {
-          console.error('EmailJS no configurado correctamente:', emailjsConfig);
-          showModal('Error de Configuración', 'Por favor, escribinos directamente a ' + emailjsConfig.contactEmail);
-          submitBtn.disabled = false;
-          buttonText.textContent = originalText;
-          loadingIcon.classList.add('hidden');
-          return;
-        }
-
-        if (!emailjsConfig.publicKey || emailjsConfig.publicKey === '') {
-          console.error('EmailJS Public Key no disponible');
-          showModal('Error de Configuración', 'Por favor, escribinos directamente a ' + emailjsConfig.contactEmail);
-          submitBtn.disabled = false;
-          buttonText.textContent = originalText;
-          loadingIcon.classList.add('hidden');
-          return;
-        }
-        
-        // Preparar datos para EmailJS usando variables de entorno
-        const templateParams = {
-          fullName: fields.fullName.value,
-          email: fields.email.value,
-          position: fields.position.value,
-          school: fields.school.value,
-          message: document.getElementById('message').value || 'Sin mensaje adicional',
-          to_email: emailjsConfig.contactEmail,
-          reply_to: fields.email.value
-        };
-
-        // Debug: verificar que los datos están correctos
-        console.log('Datos que se van a enviar:', templateParams);
-
-        emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, templateParams)
-          .then((response) => {
-            form.reset();
-            // Solo mostrar modal de éxito
-            showModal('¡Bienvenido/a a FoxMind!', 'Gracias por sumarte a nuestra lista prioritaria. Te mantendremos informado/a sobre el lanzamiento y te contactaremos pronto.');
-          })
-          .catch((error) => {
-            console.error('Error completo:', error);
-            console.error('Tipo de error:', typeof error);
-            console.error('Mensaje de error:', error.message || error.text || error);
-            console.error('Configuración usada:', {
-              serviceId: emailjsConfig.serviceId,
-              templateId: emailjsConfig.templateId,
-              publicKey: emailjsConfig.publicKey ? '***configurada***' : 'NO CONFIGURADA'
-            });
-            
-            // Solo mostrar modal de error
-            showModal('Error al Enviar', 'Hubo un problema al enviar la solicitud. Por favor, intentá de nuevo o escribinos directamente a ' + emailjsConfig.contactEmail);
-          })
-          .finally(() => {
-            submitBtn.disabled = false;
-            buttonText.textContent = originalText;
-            loadingIcon.classList.add('hidden');
-          });
-      });
-    });
-  </script>
-</section>
-
-
-  <!-- ========== 10. Footer ========== -->
-  <footer class="bg-gray-900 text-gray-400 font-lato">
-    <div class="max-w-7xl mx-auto py-16 px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div>
-        <img src="assets/FoxMindBlanco.png" alt="FoxMind Logo" class="h-24 mb-4">
-        <p class="text-base">Empoderando la educación inclusiva con tecnología innovadora.</p>
-      </div>
-      <div> 
-        <h4 class="font-poppins font-semibold text-white mb-4">Enlaces</h4>
-        <ul class="space-y-2 text-base">
-          <li><a href="#inicio" class="hover:text-white transition">Inicio</a></li>
-          <li><a href="#funciones" class="hover:text-white transition">Funciones</a></li>
-          <li><a href="#nosotros" class="hover:text-white transition">Nosotros</a></li>
-          <li><a href="#contacto" class="hover:text-white transition">Contacto</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-poppins font-semibold text-white mb-4">Contacto</h4>
-        <p class="text-base">Correo: <a href="mailto:edufoxmind@gmail.com" class="hover:text-white transition">edufoxmind@gmail.com</a></p>
-        <p class="text-base mt-2">Tel: +54 9 2625557270</p>
-        <p class="text-base mt-2">Tel: +54 9 2634249750</p>
-      </div>
-      <div>
-        <h4 class="font-poppins font-semibold text-white mb-4">Síguenos</h4>
-        <div class="flex space-x-4">
-          <a href="https://www.instagram.com/foxmind.ar/" class="hover:text-white transition">Instagram</a>
-        </div>
-      </div>
-    </div>
-    <div class="border-t border-gray-800">
-      <div class="max-w-7xl mx-auto py-6 px-6 text-center text-base text-gray-500">
-        <p>&copy; 2025 FoxMind. Todos los derechos reservados.</p>
-      </div>
-    </div>
+    <div class="footer-legal"><p>© 2026 FoxMind. Todos los derechos reservados.</p></div>
   </footer>
 
-  <!-- ========== Modal de Notificaciones ========== -->
-  <div id="notification-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg p-8 max-w-sm w-full text-center shadow-2xl">
-      <h3 id="modal-title" class="text-xl font-poppins font-bold mb-3"></h3>
-      <p id="modal-message" class="text-gray-700 mb-6"></p>
-      <button id="modal-close-btn" class="px-6 py-2 bg-foxmind-blue text-white rounded-lg hover:bg-foxmind-blue-dark transition">
-        Entendido
-      </button>
+  <div id="notification-modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-message" tabindex="-1">
+      <h2 id="modal-title">Notificación</h2>
+      <p id="modal-message"></p>
+      <button id="modal-close" class="btn btn-secondary" type="button">Entendido</button>
     </div>
   </div>
 
-  <!-- ========== Scripts ========== -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // --- Lógica del Navbar ---
-      const navbar = document.getElementById('navbar');
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-      const mobileMenu = document.getElementById('mobile-menu');
-
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          navbar.classList.add('bg-white/80', 'backdrop-blur-lg', 'shadow-lg');
-        } else {
-          navbar.classList.remove('bg-white/80', 'backdrop-blur-lg', 'shadow-lg');
-        }
-      });
-
-      mobileMenuButton.addEventListener('click', () => {
-        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-        mobileMenu.classList.toggle('hidden');
-      });
-      
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
-          mobileMenuButton.setAttribute('aria-expanded', 'false');
-        });
-      });
-
-      // --- Lógica del Modal de Notificaciones ---
-      const modal = document.getElementById('notification-modal');
-      const modalCloseBtn = document.getElementById('modal-close-btn');
-
-      modalCloseBtn.addEventListener('click', () => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      });
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-      });
-
-      // --- Lógica del Generador de Ideas (Gemini API) ---
-      const generateIdeaBtn = document.getElementById('generate-idea-btn');
-      const ideaResultContainer = document.getElementById('idea-result');
-      
-      generateIdeaBtn.addEventListener('click', () => {
-        const subject = document.getElementById('subject').value.trim();
-        const grade = document.getElementById('grade').value.trim();
-        const challenge = document.getElementById('challenge').value.trim();
-
-        if (!challenge) {
-          showModal('Campo Requerido', 'Por favor, describe el desafío o necesidad a atender para generar una idea.');
-          return;
-        }
-        
-        const prompt = `
-          Actúa como un diseñador pedagógico experto en Diseño Universal para el Aprendizaje (DUA) y gamificación.
-          Quiero una idea de actividad creativa para una clase.
-          **Contexto:**
-          - **Grado/Nivel:** ${grade || 'Cualquier nivel'}
-          - **Materia/Tema:** ${subject || 'Cualquier tema'}
-          - **Desafío principal a atender:** "${challenge}"
-          **Formato de Respuesta (OBLIGATORIO):**
-          Genera la respuesta directamente en código HTML, utilizando clases de Tailwind CSS. La estructura debe ser la siguiente:
-          <div class="bg-blue-50 p-6 rounded-lg border border-foxmind-blue-light text-left animate-fadeInDown">
-            <h3 class="text-2xl font-poppins font-bold text-foxmind-orange">Aquí un Título Creativo para la Actividad</h3>
-            <p class="text-gray-600 italic mt-1">Aquí un subtítulo que resuma el objetivo principal de la actividad.</p>
-            <h4 class="text-lg font-poppins font-semibold text-foxmind-blue mt-5">📝 Descripción de la Actividad</h4>
-            <p class="text-gray-700 mt-2">Describe la actividad paso a paso de forma clara y concisa...</p>
-            <h4 class="text-lg font-poppins font-semibold text-foxmind-blue mt-5">🧠 Adaptaciones para la Inclusión (DUA)</h4>
-            <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
-              <li><strong>Representación:</strong> Menciona cómo se presenta la información de múltiples formas (visual, auditiva, etc.).</li>
-              <li><strong>Acción y Expresión:</strong> Explica cómo los estudiantes pueden demostrar lo que saben de diferentes maneras (escribir, dibujar, hablar, etc.).</li>
-              <li><strong>Motivación:</strong> Detalla cómo la actividad capta el interés y mantiene la motivación de todos.</li>
-            </ul>
-          </div>`;
-          
-        callGemini(prompt, ideaResultContainer, generateIdeaBtn);
-      });
-
-      // --- Lógica del Sistema de Pestañas ---
-      const tabs = document.querySelectorAll('.tab-button');
-      const tabsContainer = document.getElementById('tabs-container');
-      const tabsContentContainer = document.getElementById('tabs-content-container');
-      let currentTabIndex = 0;
-      let tabInterval;
-
-      function showTab(index) {
-        tabs.forEach((tab, i) => {
-          const content = document.getElementById(`tab-content-${tab.getAttribute('data-tab')}`);
-          if (i === index) {
-            tab.classList.add('active', 'bg-foxmind-orange', 'text-white');
-            tab.classList.remove('bg-gray-200', 'text-gray-600');
-            content.classList.remove('hidden');
-            content.classList.add('animate-fadeIn');
-          } else {
-            tab.classList.remove('active', 'bg-foxmind-orange', 'text-white');
-            tab.classList.add('bg-gray-200', 'text-gray-600');
-            content.classList.add('hidden');
-            content.classList.remove('animate-fadeIn');
-          }
-        });
-      }
-
-      function nextTab() {
-        currentTabIndex = (currentTabIndex + 1) % tabs.length;
-        showTab(currentTabIndex);
-      }
-
-      function startCarousel() {
-        clearInterval(tabInterval);
-        tabInterval = setInterval(nextTab, 5000);
-      }
-
-      tabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => {
-          currentTabIndex = index;
-          showTab(index);
-          startCarousel(); // Reinicia el intervalo al hacer clic manual
-        });
-      });
-      
-      // Pausar al pasar el mouse sobre el contenedor de pestañas o el contenido
-      if(tabsContainer && tabsContentContainer) {
-        [tabsContainer, tabsContentContainer].forEach(container => {
-          container.addEventListener('mouseenter', () => clearInterval(tabInterval));
-          container.addEventListener('mouseleave', startCarousel);
-        });
-      }
-
-      // Estado inicial
-      showTab(0);
-      startCarousel();
-      
-      // --- Animación de Partículas en la Sección Nosotros ---
-      function initTeamAnimation() {
-        const canvas = document.getElementById('team-background');
-        if (!canvas) return;
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-        renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-
-        const particleCount = 500;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-
-        for (let i = 0; i < particleCount * 3; i++) {
-          positions[i] = (Math.random() - 0.5) * 10;
-        }
-
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-          color: 0xfd7f02, // foxmind-orange
-          size: 0.02
-        });
-
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-        camera.position.z = 5;
-
-        function animate() {
-          requestAnimationFrame(animate);
-          particleSystem.rotation.y += 0.0005;
-          particleSystem.rotation.x += 0.0005;
-          renderer.render(scene, camera);
-        }
-        
-        function onWindowResize() {
-            const section = document.getElementById('nosotros');
-            camera.aspect = section.offsetWidth / section.offsetHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(section.offsetWidth, section.offsetHeight);
-        }
-
-        window.addEventListener('resize', onWindowResize, false);
-        
-        // Llamada inicial para ajustar tamaño
-        onWindowResize();
-        animate();
-      }
-
-      initTeamAnimation();
-
-
-      // --- Función Genérica para llamar a la API de Gemini ---
-async function callGemini(prompt, resultContainer, button) {
-    resultContainer.innerHTML = '<div class="p-6 text-center">Cargando…</div>';
-    resultContainer.classList.remove('hidden');
-    button?.setAttribute('disabled', 'true');
-
-    try {
-      // En local con Netlify CLI y en producción el path es el mismo:
-      const endpoint = '/.netlify/functions/generate-idea';
-
-      const resp = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
-      });
-
-      if (!resp.ok) throw new Error('Fallo la solicitud');
-
-      const { html } = await resp.json();
-      resultContainer.innerHTML = html || '<p>No hubo contenido.</p>';
-    } catch (err) {
-      console.error(err);
-      resultContainer.innerHTML = '<p>Error al generar contenido.</p>';
-    } finally {
-      button?.removeAttribute('disabled');
-    }
-  }
-
-      // --- Lógica del Formulario de Contacto ---
-      // Ya se maneja en el script del formulario de contacto arriba
-    });
-  </script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
-
